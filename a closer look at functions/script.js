@@ -207,7 +207,7 @@ greetArr('Hello')('Phil');
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 */
 
-//! The 'call' and 'apply' Methods...
+//! The 'call', 'apply', and 'bind'  Methods...
 ///////////////////////////////////////////////////////////
 const lufthansa = {
     airline: 'Lufthansa',
@@ -271,7 +271,7 @@ const book = lufthansa.book; //# ==> Possible because JavaScript has FIRST CLASS
 
 // ? So How Do We fix the Above code not Working??.....***** BY SETTING THE 'this' KEYWORD MANUALLY*****
 
-//_ Using the 'call' Method...
+//! Using the 'call' Method...
 //////////////////////////////////////////
 //# Dummy Guidline Code....
 // book.call(thisKeyword_Position, functionArg_1, functionArg_2, functionArg_n);
@@ -290,7 +290,7 @@ const swiss = {
     bookings: [],
 };
 
-//_ Using the 'apply' Method...*** NOT ALWAYS USED ***
+//! Using the 'apply' Method...*** NOT ALWAYS USED ***
 ///////////////////////////////////////////////
 //# Dummy Guidline Code....
 // const arrayDataSource = [1, 2, '3', n...]; //? Stage01...
@@ -300,4 +300,183 @@ const flightData = [334, 'S. Stephens'];
 book.apply(swiss, flightData);
 console.log(swiss);
 
+//_ Alternative Means Of Doing It Using the 'call' Method...
+////////////////////////////////////////////
 book.call(swiss, ...flightData); //? Modern JavaScript...
+
+//! Using the 'bind' Method...
+///////////////////////////////////////////
+//? The 'bind' method does not immediately call the function it is added to ==> Eg. "book.bind(thisKeywordPosition)"...
+//? instead it returns a NEW FUNCTION where the 'this' keyword has been bound ==> Eg. "const newVariable = book.bind(thisKeywordPosition)"...
+
+//_ Stage 01...
+//# Set/Store the position of the 'this' Keyword 'book.bind(thisKeywordPosition)'....
+//# then add it to a Varible which will now Become a Function ==> (const newVariable = book.bind(thisKeywordPosition))...
+
+//_ Stage 02...
+//# Now You can call the function using the new Variable you created to make use of the 'bind' Method attached to it...
+//# ==> newVariable(bookFunctionArg_01, bookFunctionArg_02, bookFunctionArg_03, bookFunctionArg_03)...
+//? Remember the VALUES Required in the above Function call is dependent on the ARGUEMENTS of the 'book' Function...'
+
+// book.call(euroWings, 447, 'Jay. J');
+
+const bookFunctionForEuroWings = book.bind(euroWings);
+//? This will not call the 'book' function, Instead...It will RETURN A NEW FUNCTION where the 'this' Keyword...
+//? will ALWAYS be Set to 'euroWings'...As For the Code Above...
+
+//_ Now, lets call the function...
+bookFunctionForEuroWings(477, 'Jax Steve');
+console.log(euroWings);
+
+//_ More Examples...
+const bookFunctionForLufthansa = book.bind(lufthansa);
+bookFunctionForLufthansa(221, 'Jack Steven');
+console.log(lufthansa);
+
+const bookFunctionForSwiss = book.bind(swiss);
+bookFunctionForSwiss(427, 'J, Bowen');
+console.log(swiss);
+
+//_ Presetting One of 'book' Function's Arguments together with the 'this' Keyword Position...
+const bookFunctionForEuroWingsFlight23 = book.bind(euroWings, 23);
+bookFunctionForEuroWingsFlight23('Daniel James');
+console.log(euroWings);
+//? The Pattern Above is called "PARTIAL APPLICATION"
+//? It means that a Part of the Arguments of the Original Function('book') has already been applied/set ==> ('bookFunctionForEuroWingsFlight23')
+
+//_ Other 'bind' Method Use Cases ==> With ('eventListener')...
+////////////////////////////////////////////////////////////////////////////////////
+lufthansa.planes = 300;
+lufthansa.buyPlane = function () {
+    console.log(this);
+
+    this.planes++;
+    console.log(this.planes);
+};
+
+document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane);
+
+const addTax = function (rate) {
+    return function (value) {
+        return value + value * rate;
+    };
+};
+
+const addVAT = addTax(0.23);
+
+console.log(addVAT(300));
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//! Coding Challenge #1
+/////////////////////////////////////////////
+const poll = {
+    question: 'Which is your Favourite Programming Language ??',
+    options: ['0: JavaScript', '1: Python', '2: Rust', '3: C++'],
+    answers: new Array(4).fill(0), //#  Creates an array ==> [0, 0, 0, 0]
+
+    registerNewAnswers() {
+        const userInput = prompt(`What is your favourite programming language ??
+                    0: JavaScript
+                    1: Python
+                    2: Rust
+                    3: C++
+                    (Write option number only)`);
+
+        const numberInput = Number(userInput);
+
+        if (
+            !isNaN(numberInput) &&
+            numberInput >= 0 &&
+            numberInput < this.options.length
+        ) {
+            this.answers[numberInput] = this.options[numberInput];
+            console.log(`Input Number ${numberInput} Detected!`);
+            console.log(this.options);
+            console.log(this.answers);
+        } else {
+            console.log('Number not found!');
+        }
+
+        this.displayResults();
+        this.displayResults('string');
+    },
+    displayResults(type = 'array') {
+        if (type === 'array') {
+            // console.log(numberInput);
+            // console.log(this.answers);
+        } else if (type === 'string') {
+            console.log(`Poll results are ${this.answers.join(', ')}`);
+        }
+    },
+};
+
+// const optionIndex = this.options.indexOf(numberInput)
+
+// if (numberInput === this.options.indexOf(numberInput)) {
+// if (optionIndex !== -1) {
+// this.answers[numberInput] = this.options[numberInput];
+// console.log(`Input Number ${numberInput} Detected!`);
+// } else {
+// console.log('Number not found!');
+// }
+// if (numberInput === 0 || numberInput === 1 || numberInput === 2 || numberInput === 3) {
+
+// } else if (numberInput === 1) {
+//     this.answers[numberInput] = this.options[numberInput];
+//     console.log(`Input Number ${numberInput} Detected!`);
+// } else if (numberInput === 2) {
+//     this.answers[numberInput] = this.options[numberInput];
+//     console.log(`Input Number ${numberInput} Detected!`);
+// } else if (numberInput === 3) {
+//     this.answers[numberInput] = this.options[numberInput];
+//     console.log(`Input Number ${numberInput} Detected!`);
+// }
+// },
+// };
+
+// poll.registerNewAnswers();
+
+document
+    .querySelector('.poll')
+    .addEventListener('click', poll.registerNewAnswers.bind(poll));
+
+// console.log(poll.options);
+console.log(poll.answers);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//! Closures....
+////////////////////
+const secureBooking = function () {
+    let passengerCount = 0;
+
+    return function () {
+        passengerCount++;
+        console.log(`${passengerCount} passengers...`);
+    };
+};
+
+const booker = secureBooking();
+
+// secureBooking()();
+// secureBooking()();
+// secureBooking()();
+
+booker();
+booker();
+booker();
+
+// Any function always has Access to the VARIABLE ENVIRONMENT
+// of the Excution Context(Where the Function was created from) in which the Function was created even after that EC is gone...
+
+// CLOSURE is therefore the VARIABLE ENVIRONMENT attached to the function(Outer Function/Parent Function)...
+// Exactly as it was at the time and place the function was created (ie from the PARENT FUNCTION)...
+
+// *** From the Above get, the 'booker' function has Access to the 'passengerCount' variable because it is basically defined
+//  in the scope in which the booker function was actually created***
+//? Questions...
+// Does it affect Variables in the Global Scope, Variables inside an Object or Variables inside the Bigger/Outer Function ??
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
