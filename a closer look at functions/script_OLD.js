@@ -207,8 +207,6 @@ greetArr('Hello')('Phil');
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 */
 
-/*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! The 'call', 'apply', and 'bind'  Methods...
 ///////////////////////////////////////////////////////////
 const lufthansa = {
@@ -310,7 +308,6 @@ book.call(swiss, ...flightData); //? Modern JavaScript...
 ///////////////////////////////////////////
 //? The 'bind' method does not immediately call the function it is added to ==> Eg. "book.bind(thisKeywordPosition)"...
 //? instead it returns a NEW FUNCTION where the 'this' keyword has been bound ==> Eg. "const newVariable = book.bind(thisKeywordPosition)"...
-//? It is Set to Whatever Value We pass into bind ==> (somethingSomething.bind(thisKeywordPosition))
 
 //_ Stage 01...
 //# Set/Store the position of the 'this' Keyword 'book.bind(thisKeywordPosition)'....
@@ -323,40 +320,33 @@ book.call(swiss, ...flightData); //? Modern JavaScript...
 
 // book.call(euroWings, 447, 'Jay. J');
 
-// book.bind(euroWings);
+const bookFunctionForEuroWings = book.bind(euroWings);
 //? This will not call the 'book' function, Instead...It will RETURN A NEW FUNCTION where the 'this' Keyword...
 //? will ALWAYS be Set to 'euroWings'...As For the Code Above...
 
-//? Now Let's Assign a Variable to it...Which will now become a function since the 'bind' method always RETURNS a Function...ORRR
-//? Because 'book' as used in our code references a (METHOD/FUNCTION).......FIND OUT WHICH IS RESPONSIBLE!!!!
-const bookFunctionForEuroWings = book.bind(euroWings);
-
 //_ Now, lets call the function...
-//? Remember the VALUES Required in the Function call below is dependent on the ARGUEMENTS of the 'book' Function...
 bookFunctionForEuroWings(477, 'Jax Steve');
 console.log(euroWings);
 
 //_ More Examples...
-//? Defining the position of the 'this' Once using the 'bind' method then REUSING the Attached VARIABLE(Which is Now a Function) as Many Times as Needed...
 const bookFunctionForLufthansa = book.bind(lufthansa);
-const bookFunctionForSwiss = book.bind(swiss);
-
 bookFunctionForLufthansa(221, 'Jack Steven');
 console.log(lufthansa);
 
+const bookFunctionForSwiss = book.bind(swiss);
 bookFunctionForSwiss(427, 'J, Bowen');
 console.log(swiss);
 
-//? Going Further, We Can Preset One OR More of 'book' Function's Arguments together with the 'this' Keyword's (Intended Position) using the 'bind' Method...
+//_ Presetting One of 'book' Function's Arguments together with the 'this' Keyword Position...
 const bookFunctionForEuroWingsFlight23 = book.bind(euroWings, 23);
 bookFunctionForEuroWingsFlight23('Daniel James');
 console.log(euroWings);
 //? The Pattern Above is called "PARTIAL APPLICATION"
-//? It means that a Part of the Arguments for the Original Function('book') has already been applied/set ==> ('bookFunctionForEuroWingsFlight23')
+//? It means that a Part of the Arguments of the Original Function('book') has already been applied/set ==> ('bookFunctionForEuroWingsFlight23')
 
-//_ Other 'bind' Method Use Cases ==> Object With ('eventListener')...
+//_ Other 'bind' Method Use Cases ==> With ('eventListener')...
 ////////////////////////////////////////////////////////////////////////////////////
-lufthansa.planes = 300; //? Adding A New Property(planes) to the Object(lufthansa)...Object Exist Above, Look Up...
+lufthansa.planes = 300;
 lufthansa.buyPlane = function () {
     console.log(this);
 
@@ -364,127 +354,17 @@ lufthansa.buyPlane = function () {
     console.log(this.planes);
 };
 
-// document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane); // Result ==> NaN
-//? This above code won't work because the 'this' Keyword from "lufthansa.buyPlane" method is pointing to.....
-//? The Button Element(.buy), Which initiated it...
-//_ The Position of the 'this' is Dependent on How A Function was called....
-//! WHAT DOES THIS ACTUALLY MEAN ??
+document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane);
 
-//? REASON ==> In An Event Handler Function, the 'this' Keyword ALWAYS points to the Element on which that Handler Function is attached to...
-//? For Our Case Above ==> The Handler Function(lufthansa.buyPlane) is attached to The Button Element (document.querySelector('.buy' ))
-
-//? SOLUTION ??? ==> By Adding the 'bind' Method to the Handler Function....MANUALLY defining the 'this' Keyword Position...
-
-document
-    .querySelector('.buy')
-    .addEventListener('click', lufthansa.buyPlane.bind(lufthansa));
-//? MY THOUGHT ==> Looking at the Code Above, the 'bind' Method is only just HELPING OUT 'lufthansa.buyPlane' by Supplying IT the Needed Resources/Giving It the Location 'Where'...
-//? For IT to work(Which was inside the Object 'lufthansa')...Because 'PART' of what was Required by the function(lufthansa.buyPlane) was inside that Location/Object ==> (lufthansa)
-//? More Like (Event Handler/Call-Back Function) Helper...Using the 'bind' Method...
-
-//_ Another Instance of PARTIAL APPLICATION of the 'bind' Method...(Presetting Parameters/Values)
-//? In a Situation where we don't neccessarily Need to Define the position of the 'this' Keyword....
-//? Let's Say We are just not interested in the 'this' Keyword...
-//? The 'bind' Method is Almost Always Used...
-
-//? Always Pay Attention to the ORDER of arguments inside a given Function...Which Value is supposed to come first!!!
-const addTax = (rate, value) => value + value * rate;
-console.log(addTax(0.1, 200));
-
-//_ KNOW THE DIFFERENCE!!!!
-// const newVariable1 = addTax; //# Assigning A Function to a New Variable...
-// const newVariable2 = addTax(imaginaryContentInside); //# Assigning a Function to a New Variable and Immediately Initializing/Invoking It...
-
-//? Variation 1...
-// const addVAT1 = addTax(0.2, 40000);
-// console.log(typeof addVAT1); //# Number...
-//# Beecause Arrow Functions Implicit Returns...Calculations inside the function was evaluated immediately all required values/arguments was Supplied...
-
-// console.log(addVAT1); //# 48000...
-
-//? Variation 2...
-// const addVAT2 = addTax;
-// console.log(typeof addVAT2); //# Function...
-// console.log(addVAT2); //# (rate, value) => value + value * rate...Complete Content of the 'addTax' Function...
-// console.log(addVAT2(0.38, 400)); //# 552
-
-//? Ignoring the 'this' Keyword...
-const addVAT = addTax.bind(null, 0.23);
-//# Creating a New Unique/Specific Function based on/from the Original Function(addTax)...
-
-// const addVAT = addTax(null, 0.23); //# 'addVAT' is not a function...
-
-console.log(typeof addVAT); //# Function...
-console.log(addVAT); //# (rate, value) => value + value * rate...(Function was resolved from bound function) => From Browser Console...
-// const addVAT = value => value + value * 0.23;
-
-console.log(addVAT(400));
-console.log(addVAT(23));
-
-console.log(addVAT(0.255, 3000, 5000));
-//# Result is 0.31365...The Calculation was done without the value '3000', it was ignored...since the Original Function(addTax)...
-//# Only had Provision for 2(TWO) Value and Considering the first value was already bound(addTax.bind(null, 0.23))...
-
-//? Using Function Expression...
-const addTaxx = function (rate) {
+const addTax = function (rate) {
     return function (value) {
         return value + value * rate;
     };
 };
-//# Can i Have More than One Argument in either of the Functions above ?? And Why ??
 
-//? Why was the 'bind' Method not used ??
-// const addVATT = addTaxx.bind(null, 0.23);
+const addVAT = addTax(0.23);
 
-//_ Version 1...
-const addVATT1 = addTaxx(0.23); //# Partially Initialized the 'addTaxx' function...
-// const addVATT1 = addTaxx;
-console.log(typeof addVATT1); //# function...
-
-console.log(addVATT1); //? Inner 'addTaxx' function.. .Because Value for 'Outer' Function(0.23) has been Supplied... And Because NO Value has been supplied to the inner function...It seeks exactly 1(one) value...
-//# ƒ (value) {
-//#   return value + value * rate;
-//#}
-
-console.log(addVATT1(30000)); //? 36900...Value finally supplied to the 'inner function', Now the expression was Successfully Evaluated...
-// console.log(addVATT1(0.23)(30000000));
-console.log(addVATT1(0.23, 3002100)); //#3002100 was not considered in the Evaluation...So RESULT = 0.28290000000000004...
-
-//_ Version 2...
-const addVATT2 = addTaxx.bind(null, 0.23); //? Partial Application...
-console.log(typeof addVATT2); //# function...
-
-console.log(addVATT2(5000)); //? Inner 'addTaxx' function...(5000) Ignored..
-
-console.log(addVATT2); //? Outer 'addTaxx' function...Whole Function '
-//# ƒ (rate) {
-//#    return function (value) {
-//#         return value + value * rate;
-//#     };
-//# } (Function was resolved from bound function) => From Browser Console...
-
-console.log(addVATT2(0)); //? Inner 'addTaxx' function...(0) Ignored...
-//# ƒ (value) {
-//#   return value + value * rate;
-//#}
-
-console.log(addVATT2()(50)); //_ RESULT FINALLY!!!
-// console.log(result);
-
-//? Ok...So what happens when i want to skip an argument/value While Maintaining the Argument Order ????
-const addTax_ = (rate, value1, value2) => value1 + value2 * rate;
-console.log(addTax_(0.1, 2000, 2000));
-
-const addVAT_ = addTax_.bind(null, 0.25);
-// const addVAT_ = addTax_.bind(null, 0.25, null);
-// const addVAT_ = addTax_.bind(null, 0.25, null, null);
-//? Trying to Skip Arguments...
-
-// console.log(addVAT_(500)(3000)); //# addVAT_(...) is not a function...
-// console.log(addVAT_(7650));
-console.log(addVAT_(765));
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
+console.log(addVAT(300));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! Coding Challenge #1
@@ -495,147 +375,72 @@ const poll = {
     answers: new Array(4).fill(0), //#  Creates an array ==> [0, 0, 0, 0]
 
     registerNewAnswers() {
-        // const userInput = prompt(`What is your favourite programming language ??
-        //             0: JavaScript
-        //             1: Python
-        //             2: Rust
-        //             3: C++
-        //             (Write option number only)`);
+        const userInput = prompt(`What is your favourite programming language ??
+                    0: JavaScript
+                    1: Python
+                    2: Rust
+                    3: C++
+                    (Write option number only)`);
 
-        const userInput_ = prompt(
-            `${this.question}\n${this.options.join(
-                '\n'
-            )}\n(Write Option Number Only)`
-        );
-        //? \n ==> Put The String on a NEW LINE...
-        //? this.options.join('\n') ==> Join The Individual Array Elements Together(Transforming The ARRAY to STRING)...
-        //? But Splitting It...Putting Each Element in a NEW LINE...
+        const numberInput = Number(userInput);
 
-        console.log(userInput_);
-
-        // const numberInput = Number(userInput_.trim()); //? Trying to Eliminate Possible space ' ' from the Input Field...
-
-        const trimmedInput = userInput_.trim(); //? Trying to Eliminate Possible space ' ' from the Input Field...
-
-        const numberInput = trimmedInput;
-
-        // const numberInput = Number(trimmedInput); //? The 'Number()' Method keeps converting Empty Spaces(' ') to 'Zero(0)' Which Results to Errors in the Code from the (IF Statements)
-
-        // const numberInput = parseFloat(trimmedInput); //? parseFloat() to Ensure that empty/space (' ') in the Input Field is treated as (NaN) ==> 'INVALID INPUT'...
-
-        //
-        // const numberInput = Number(userInput);
-
-        //_ METHOD 1
-
-        //? Using Conditionals (IF) Statements...
-        // if (
-        //     numberInput !== ' ' &&
-        //     !isNaN(numberInput) &&
-        //     numberInput >= 0 &&
-        //     // numberInput < this.options.length
-        //     numberInput < this.answers.length
-        // ) {
-
-        //_ METHOD 2
-
-        //? Used 'REGULAR EXPRESSION(REGEX)' considering that '01', '02', '03' are possible INPUTS and (0, 1, 2, 3) are THE ONLY VALID CONSIDERED INPUTS...
-        if (/^[0-3]$/.test(numberInput)) {
-            this.answers[numberInput]++; //? Just Updates Count inside the 'answers' Array for each Position, depending on 'numberInput' Value...
-
-            // this.answers[numberInput] = this.options[numberInput]; //? Updating the 'answers' ARRAY from the 'options' ARRAY depending on 'numberInput'....
-
+        if (
+            !isNaN(numberInput) &&
+            numberInput >= 0 &&
+            numberInput < this.options.length
+        ) {
+            this.answers[numberInput] = this.options[numberInput];
             console.log(`Input Number ${numberInput} Detected!`);
             console.log(this.options);
             console.log(this.answers);
-        } else if (isNaN(numberInput)) {
-            console.log('Input is Not A Number!!');
         } else {
-            console.log('Number Not Found!!');
+            console.log('Number not found!');
         }
 
         this.displayResults();
         this.displayResults('string');
     },
-
-    // displayResults(type = Array) {
-    //     if (type === Array) {
-    //         console.log(this.answers);
-    //     } else if (type === String) {
-    //         // console.log(`Poll Results are ${this.answers}`);
-    //         console.log(`Poll Results are ${this.answers.join(', ')}`);
-    //     }
-    // },
-    //? 'type === Array' && 'type === String' ==> This is comparing 'type' with The Global 'Array' and 'String' Objects which will always be FALSE!!
-    //? Except it is EXPLICITLY STATED......
-
-    //? For Global Array = (type === 'array' && Array.isArray(this.answers))...
-
-    //? For Global String = (type === 'string' && typeof this.answers === 'string')...
-
     displayResults(type = 'array') {
         if (type === 'array') {
-            // console.log(numberInput); //? Why can't you call a Variable 'numberInput' contained in another Method to another Method(Function) inside the same Object ??
-            console.log(this.answers);
+            // console.log(numberInput);
+            // console.log(this.answers);
         } else if (type === 'string') {
             console.log(`Poll results are ${this.answers.join(', ')}`);
-            //? 'join(', ') ==> Join each Element of 'this.answers' array in a single line...
-            //? Then Separate Each Element using comma(,) and empty space( )...
         }
     },
 };
+
+// const optionIndex = this.options.indexOf(numberInput)
+
+// if (numberInput === this.options.indexOf(numberInput)) {
+// if (optionIndex !== -1) {
+// this.answers[numberInput] = this.options[numberInput];
+// console.log(`Input Number ${numberInput} Detected!`);
+// } else {
+// console.log('Number not found!');
+// }
+// if (numberInput === 0 || numberInput === 1 || numberInput === 2 || numberInput === 3) {
+
+// } else if (numberInput === 1) {
+//     this.answers[numberInput] = this.options[numberInput];
+//     console.log(`Input Number ${numberInput} Detected!`);
+// } else if (numberInput === 2) {
+//     this.answers[numberInput] = this.options[numberInput];
+//     console.log(`Input Number ${numberInput} Detected!`);
+// } else if (numberInput === 3) {
+//     this.answers[numberInput] = this.options[numberInput];
+//     console.log(`Input Number ${numberInput} Detected!`);
+// }
+// },
+// };
+
 // poll.registerNewAnswers();
-
-//! Using Random TEST DATA With The Method 'displayResults' ...
-// [2, 5, 7];
-// [3, 7, 11, 22];
-
-const testData01 = [2, 5, 7];
-// poll.displayResults.apply(poll, [testData01]);
-poll.displayResults.apply({ answers: testData01 }); //? The 'this' Keyword inside the 'displayResults' Method points to the 'poll' Object ==> this.answers
-//? To change this position of the 'this' Keyword, We created another object with property 'answers' inside it ==>  .apply({ answers: testData01 })
-
-//? So... ==> ({ answers: testData01 }) is the 'this' Keyword's New Position...A Different Object from the 'poll' Object...
-
-poll.displayResults.call({ answers: [3, 7, 11, 22] }, 'string'); //? 'string' Here is now An Argument for the 'displayResults' Method...
-
-/*
-//_ GARBAGE CODE 1...
-////////////////////////////////////
-const optionIndex = this.options.indexOf(numberInput)
-
-if (numberInput === this.options.indexOf(numberInput)) {
-if (optionIndex !== -1) {
-this.answers[numberInput] = this.options[numberInput];
-console.log(`Input Number ${numberInput} Detected!`);
-} else {
-console.log('Number not found!');
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////
-*/
-
-/*
-//_ GARBAGE CODE 2...
-////////////////////////////////////////////
-if (numberInput === 0 || numberInput === 1 || numberInput === 2 || numberInput === 3) {
-} else if (numberInput === 1) {
-    this.answers[numberInput] = this.options[numberInput];
-    console.log(`Input Number ${numberInput} Detected!`);
-} else if (numberInput === 2) {
-    this.answers[numberInput] = this.options[numberInput];
-    console.log(`Input Number ${numberInput} Detected!`);
-} else if (numberInput === 3) {
-    this.answers[numberInput] = this.options[numberInput];
-    console.log(`Input Number ${numberInput} Detected!`);
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
 
 document
     .querySelector('.poll')
     .addEventListener('click', poll.registerNewAnswers.bind(poll));
 
-console.log(poll.options);
+// console.log(poll.options);
 console.log(poll.answers);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
