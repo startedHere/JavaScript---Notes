@@ -527,6 +527,7 @@ const poll = {
         // const numberInput = Number(userInput);
 
         //_ METHOD 1
+
         //? Using Conditionals (IF) Statements...
         // if (
         //     numberInput !== ' ' &&
@@ -537,18 +538,12 @@ const poll = {
         // ) {
 
         //_ METHOD 2
-        //? Using Short Circuiting (&&)...
-        typeof numberInput === 'number' &&
-            numberInput < this.answers.length &&
-            this.answers[numberInput]++;
 
-        //_ METHOD 3
         //? Used 'REGULAR EXPRESSION(REGEX)' considering that '01', '02', '03' are possible INPUTS and (0, 1, 2, 3) are THE ONLY VALID CONSIDERED INPUTS...
         if (/^[0-3]$/.test(numberInput)) {
-            this.answers[numberInput]++; //? Just Updates Number Count by 1(++) inside the 'answers' Array for each Position, depending on 'numberInput' Value...
+            this.answers[numberInput]++; //? Just Updates Count inside the 'answers' Array for each Position, depending on 'numberInput' Value...
 
-            // this.answers[numberInput] = this.options[numberInput];
-            //? Updating the 'answers' ARRAY from the 'options' ARRAY depending on 'numberInput', Which is used to Determine Element Position inside the 'options' Array...
+            // this.answers[numberInput] = this.options[numberInput]; //? Updating the 'answers' ARRAY from the 'options' ARRAY depending on 'numberInput'....
 
             console.log(`Input Number ${numberInput} Detected!`);
             console.log(this.options);
@@ -597,165 +592,53 @@ const poll = {
 
 const testData01 = [2, 5, 7];
 // poll.displayResults.apply(poll, [testData01]);
-// poll.displayResults.apply({ answers: testData01 });
-//? The 'this' Keyword inside the 'displayResults' Method points to the 'poll' Object ==> this.answers...
+poll.displayResults.apply({ answers: testData01 }); //? The 'this' Keyword inside the 'displayResults' Method points to the 'poll' Object ==> this.answers
+//? To change this position of the 'this' Keyword, We created another object with property 'answers' inside it ==>  .apply({ answers: testData01 })
 
-//? To change position(pointer) of the 'this' Keyword, We need Another Object which has an 'answers' Property inside it since the Method 'displayResults' is Dependent On it...
-//? We created another object with property 'answers' inside it ==>  .apply({ answers: testData01 })
+//? So... ==> ({ answers: testData01 }) is the 'this' Keyword's New Position...A Different Object from the 'poll' Object...
 
-//? So... ==> ({ answers: testData01 }) is the 'this' Keyword's New Position(Where it is Now Set to Point To)...A Different Object from the 'poll' Object...
+poll.displayResults.call({ answers: [3, 7, 11, 22] }, 'string'); //? 'string' Here is now An Argument for the 'displayResults' Method...
 
-//? Now Combining The 'apply' Method with A Valid Argument from the 'displayResults' Method...
-poll.displayResults.apply({ answers: testData01 }, ['string']);
-
-//? It Also Works With The 'apply' Method....
-poll.displayResults.call({ answers: [3, 7, 11, 22] }, 'string'); //# 'string' Here is now An Argument for the 'displayResults' Method...
-
-//_ Questions!!!
-//# Can I combine the 'Apply' Method with any argument of a Function it is attached to ??...(In this Case ==> 'displayResults' Method)...
-//? YESSS!!!! Confirmed!!!
-
-//# In METHOD 2 (Short-Circuiting(&&)), Can You add other things at the end of that expression ?? Something like a 'console.log'...
-//# depending on if the Conditions of the Short-Circuit(&&) are True ??
-
+/*
 //_ GARBAGE CODE 1...
-////////////////////////////////////////////////
-// const optionIndex = this.options.indexOf(numberInput);
+////////////////////////////////////
+const optionIndex = this.options.indexOf(numberInput)
 
-// if (numberInput === this.options.indexOf(numberInput)) {
-//     if (optionIndex !== -1) {
-//         this.answers[numberInput] = this.options[numberInput];
-//         console.log(`Input Number ${numberInput} Detected!`);
-//     } else {
-//         console.log('Number not found!');
-//     }
-// }
-////////////////////////////////////////////////////////////////////////////////////
+if (numberInput === this.options.indexOf(numberInput)) {
+if (optionIndex !== -1) {
+this.answers[numberInput] = this.options[numberInput];
+console.log(`Input Number ${numberInput} Detected!`);
+} else {
+console.log('Number not found!');
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+*/
 
+/*
 //_ GARBAGE CODE 2...
-////////////////////////////////////////////////////
-// if (numberInput === 0 || numberInput === 1 || numberInput === 2 || numberInput === 3) {
-// } else if (numberInput === 1) {
-//     this.answers[numberInput] = this.options[numberInput];
-//     console.log(`Input Number ${numberInput} Detected!`);
-// } else if (numberInput === 2) {
-//     this.answers[numberInput] = this.options[numberInput];
-//     console.log(`Input Number ${numberInput} Detected!`);
-// } else if (numberInput === 3) {
-//     this.answers[numberInput] = this.options[numberInput];
-//     console.log(`Input Number ${numberInput} Detected!`);
-// }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////
+if (numberInput === 0 || numberInput === 1 || numberInput === 2 || numberInput === 3) {
+} else if (numberInput === 1) {
+    this.answers[numberInput] = this.options[numberInput];
+    console.log(`Input Number ${numberInput} Detected!`);
+} else if (numberInput === 2) {
+    this.answers[numberInput] = this.options[numberInput];
+    console.log(`Input Number ${numberInput} Detected!`);
+} else if (numberInput === 3) {
+    this.answers[numberInput] = this.options[numberInput];
+    console.log(`Input Number ${numberInput} Detected!`);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
 
 document
     .querySelector('.poll')
     .addEventListener('click', poll.registerNewAnswers.bind(poll));
 
-// console.log(poll.options);
-// console.log(poll.answers);
+console.log(poll.options);
+console.log(poll.answers);
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//_ Article Points For the 'this' Keyword...
-//? Global Context...
-console.log(this);
-
-//? Function Context..
-const thisTestFunction = function () {
-    console.log(this);
-};
-thisTestFunction();
-
-//? Object Context...
-const thisTestObject = {
-    humanName: 'aha',
-    testt() {
-        console.log(this);
-    },
-};
-this.testt();
-
-//? In DOM Elements...
-//# The 'this' Keyword inside a Handler/Call-Back Function attached to a DOM Element will always point to that 'DOM Element'...
-//# Except "Explicitly" Stated...
-
-//? For Arrays...
-//# Arrays don't have 'this' Keyword of their own, But they can depend on Methods(forEach for Example) attached to it(Read: Arrays)...
-//# To provide a 'this' Keyword...
-
-//? As Seen In Construction functions
-*/
-
-/*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! Immediately Invoked Function Expressions (IIFE)...
-////////////////////////////////////////////////////////////////////////
-//# When You need a Function that Only Executed Once and Never Again...
-//# Basically A Function that Disappears after it is called Once...
-
-//? What Exactly is IIFE's USE CASE ?? (attaches *thinking emoji* AND *hand supporting jaw emoji*)
-
-const runOnce = function () {
-    console.log(`This Function will Never Run Again...`);
-};
-runOnce();
-
-//# But Then Again, if I Call this Function('runOnce') Again, It Will Run....SOOO WHAT THEN IS THE POINT ??
-runOnce();
-
-//# We Really Want To Achieve Here Is To ==> Run A Function Immediately We Create It and Not Save It Somewhere...
-
-//# Just Writing the Function without assigning it to ANY VARIABLE...
-
-(function () {
-    console.log(`This Function Will Run Again If You Try Hard Enough...`);
-})(); //? This Whole Expression is NOW What You Call the IIFE (Immediately Invoked Function Expression)...
-
-//# The Trick is Simply wrapping the Function in Parenthese( () )...This will Transform the Initial Function STATEMENT to An EXPRESSION...
-
-//# Let's Try It For ARROW Functions
-(() => console.log(`This Will ALSO MIGHT NEVER Run Again...`))();
-
-//# How Is This Coding Pattern Useful ??
-
-//? The Idea is that Since Functions create SCOPES, And One Scope Does Not have Access To Variables From An *Inner Scope*
-//? Example is From the *GLOBAL SCOPE* Trying To Access A Variable Defined Inside a Function Scope...
-
-(function () {
-    console.log(`This Function Will Run Again If You Try Hard Enough...`);
-    const isPrivate = 55;
-})();
-
-// console.log(isPrivate); //? RESULT ==> isPrivate is not defined...
-
-//_The Scope Chain works From the Inner Scope(Function Scope) to the Outside Scope(Global Scope) AND NOT THE OTHER WAY AROUND...
-
-//# Variables Declared in Global Scope can be Accessed From Inside A Function(Function Scope)...
-//# While Variables Declared Inside A Function(Function Scoped) Cannot Be Accessed From The Global Scope...
-//? Do You Know The Reason WHY ???
-
-//? ALL DATA DEFINED INSIDE A SCOPE IS PRIVATE...THE DATA IS ENCAPSULATED...PROTECTS VARIABLES FROM BEING ACCIDENTALLY OVER-WRITTEN...
-
-//? It is Important to Hide Variables, And 'Scope' is a Good Tool for Doing this...
-//? One Of the Reasons Why IIFE WAS INVENTED...Even Though It is NOT REALLY A FEATURE OF THE JAVASCRIPT LANGUAGE...
-
-//? It is More Of A Coding Pattern than A Feature...
-
-//# In ES6, Variables declared with 'let' OR 'const' creates its own Scope inside a Block...(From How JavaScript Works Behind The Scenes Section...)
-//? How is This(Above) Even Possible ??
-
-{
-    const isUnique = 55;
-    var isNotSpecial = 22;
-}
-// console.log(isUnique);
-console.log(isNotSpecial);
-
-//# In Modern JavaScript, IIFE are not That Used Anymore Since All We Want Is To Create a New Scope For Data Privacy, All We Need to
-//# to do is Just Create a Block ( { } ) As seen Above... No Need Of Creating A New Function Just To Form A New Scope...
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
 
 /*
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
